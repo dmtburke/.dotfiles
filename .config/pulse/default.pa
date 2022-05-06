@@ -1,0 +1,16 @@
+.include /etc/pulse/default.pa
+
+#load-module module-null-sink sink_name=mic_denoised_out sink_properties=device.description=MicFiltered
+
+#load-module module-ladspa-sink sink_name=mic_raw_in sink_master=mic_denoised_out label=noise_suppressor_mono plugin=/usr/local/lib/ladspa/librnnoise_ladspa.so control=50
+
+#load-module module-loopback source=alsa_input.usb-BLUE_MICROPHONE_Blue_Snowball_201306-00.analog-stereo sink=mic_raw_in channels=1
+
+#set-default-source mic_denoised_out.monitor
+
+# if this shit stops workin check the device numbers
+load-module module-combine-sink sink_name=discord sink_properties=device.description=Discord slaves=alsa_output.pci-0000_0a_00.4.analog-stereo channels=2
+load-module module-combine-sink sink_name=music sink_properties=device.description=Music slaves=alsa_output.pci-0000_0a_00.4.analog-stereo channels=2
+load-module module-combine-sink sink_name=other1 sink_properties=device.description=Stream slaves=alsa_output.pci-0000_0a_00.4.analog-stereo channels=2
+load-module module-combine-sink sink_name=other2 sink_properties=device.description=Other slaves=alsa_output.pci-0000_0a_00.4.analog-stereo channels=2
+
